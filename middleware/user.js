@@ -16,8 +16,8 @@
 //   const user = await dbClient.db.collection('users').findOne({ _id: ObjectId(userId) });
 //   if (!user) return res.status(401).send({ error: 'Unauthorized' });
 //   console.log(user);
+//  req.user = user;
 //   next();
-//   return user;
 // };
 
 // module.exports = getUser;

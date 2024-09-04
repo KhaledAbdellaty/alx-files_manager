@@ -88,7 +88,7 @@ class FilesController {
     const page = Number(req.query.page) || 0;
     const pageSize = 20;
     const pipeline = [
-      { $match: { userId: ObjectId(userId) } },
+      { $match: { userId } },
       { $match: { parentId: parentId === '0' ? 0 : ObjectId(parentId) } },
       { $skip: page * pageSize },
       { $limit: pageSize },
@@ -110,7 +110,6 @@ class FilesController {
       { $set: { isPublic: true } },
       { returnDocument: 'after' },
     );
-    console.log(file);
     if (!file.value) {
       return res.status(404).json({ error: 'Not found' });
     }
