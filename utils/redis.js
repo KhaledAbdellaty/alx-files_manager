@@ -20,7 +20,7 @@ class RedisClient {
 
   async get(key) {
     try {
-      return await this.getAsync(key);
+      return this.getAsync(key);
     } catch (error) {
       return null;
     }
@@ -28,7 +28,7 @@ class RedisClient {
 
   async set(key, value, duration) {
     try {
-      return await this.setAsync(key, duration, value);
+      return this.setAsync(key, duration, value);
     } catch (error) {
       return null;
     }
@@ -36,7 +36,7 @@ class RedisClient {
 
   async del(key) {
     try {
-      return await this.delAsync(key);
+      return this.delAsync(key);
     } catch (error) {
       return null;
     }
