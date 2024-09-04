@@ -40,6 +40,12 @@ function myRouter(app) {
 
   // GET /files => FilesController.getIndex
   router.get('/files', FileController.getIndex);
+
+  // PUT /files/:id/publish => FilesController.putPublish
+  router.put('/files/:id/publish', FileController.putPublish);
+
+  // PUT /files/:id/publish => FilesController.putUnpublish
+  router.put('/files/:id/unpublish', FileController.putUnpublish);
 }
 
 export default myRouter;

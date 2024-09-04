@@ -69,7 +69,7 @@ class FileController {
 
     const fileId = req.params.id;
     const result = {
-      _id: fileId,
+      _id: ObjectId(fileId),
       userId,
     };
     const file = await dbClient.getOne('files', result);
@@ -87,14 +87,55 @@ class FileController {
     const page = Number(req.query.page) || 0;
     const pageSize = 20;
     const pipeline = [
-      { $match: { userId: ObjectId(userId) } },
+      { $match: { userId } },
       { $match: { parentId: parentId === '0' ? 0 : ObjectId(parentId) } },
       { $skip: page * pageSize },
       { $limit: pageSize },
     ];
     const files = await dbClient.db.collection('files').aggregate(pipeline).toArray();
-    console.log(files);
-    return res.status(200).json(files);
+    return res.status(200).json({ files });
+  }
+
+  static async putPublish(req, res) {
+    const token = req.headers['x-token'];
+    if (!token) return res.status(401).send({ error: 'Unauthorized' });
+    const userId = await redisClient.get(`auth_${token}`);
+    if (!userId) return res.status(401).send({ error: 'Unauthorized' });
+
+    const fileId = req.params.id;
+
+    const file = await dbClient.db.collection('files').findOneAndUpdate(
+      { _id: ObjectId(fileId), userId },
+      { $set: { isPublic: true } },
+      { returnDocument: 'after' },
+    );
+    console.log(file);
+    if (!file.value) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+
+    return res.status(200).json(file.value);
+  }
+
+  static async putUnpublish(req, res) {
+    const token = req.headers['x-token'];
+    if (!token) return res.status(401).send({ error: 'Unauthorized' });
+    const userId = await redisClient.get(`auth_${token}`);
+    if (!userId) return res.status(401).send({ error: 'Unauthorized' });
+
+    const fileId = req.params.id;
+
+    const file = await dbClient.db.collection('files').findOneAndUpdate(
+      { _id: ObjectId(fileId), userId },
+      { $set: { isPublic: false } },
+      { returnDocument: 'after' },
+    );
+
+    if (!file.value) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+
+    return res.status(200).json(file.value);
   }
 }
 
