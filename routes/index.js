@@ -44,7 +44,7 @@ function myRouter(app) {
   // PUT /files/:id/publish => FilesController.putPublish
   router.put('/files/:id/publish', FileController.putPublish);
 
-  // PUT /files/:id/publish => FilesController.putUnpublish
+  // PUT /files/:id/unpublish => FilesController.putUnpublish
   router.put('/files/:id/unpublish', FileController.putUnpublish);
 }
 

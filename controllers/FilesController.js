@@ -88,7 +88,7 @@ class FileController {
     const pageSize = 20;
     const pipeline = [
       { $match: { userId } },
-      { $match: { parentId: parentId === '0' ? 0 : ObjectId(parentId) } },
+      { $match: { parentId: parentId === '0' ? 0 : parentId } },
       { $skip: page * pageSize },
       { $limit: pageSize },
     ];
