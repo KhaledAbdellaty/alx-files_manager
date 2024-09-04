@@ -34,6 +34,12 @@ function myRouter(app) {
   });
 
   router.post('/files', FileController.postUpload);
+
+  // GET /files/:id => FilesController.getShow
+  router.get('/files/:id', FileController.getShow);
+
+  // GET /files => FilesController.getIndex
+  router.get('/files', FileController.getIndex);
 }
 
 export default myRouter;
