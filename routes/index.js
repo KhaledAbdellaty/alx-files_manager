@@ -1,7 +1,7 @@
 import express from 'express';
 import AppController from '../controllers/AppController';
 import AuthController from '../controllers/AuthController';
-import UserController from '../controllers/UserController';
+import UsersController from '../controllers/UsersController';
 import FileController from '../controllers/FilesController';
 
 const router = express.Router();
@@ -18,7 +18,7 @@ function myRouter(app) {
   });
 
   router.post('/users', (req, res) => {
-    UserController.postNew(req, res);
+    UsersController.postNew(req, res);
   });
 
   router.get('/connect', (req, res) => {
@@ -30,7 +30,7 @@ function myRouter(app) {
   });
 
   router.get('/users/me', (req, res) => {
-    UserController.getMe(req, res);
+    UsersController.getMe(req, res);
   });
 
   router.post('/files', FileController.postUpload);
