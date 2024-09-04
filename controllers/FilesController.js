@@ -1,3 +1,4 @@
+import { contentType } from 'mime-types';
 import { ObjectId } from 'mongodb';
 import { promises } from 'fs';
 import path from 'path';
@@ -8,7 +9,7 @@ import redisClient from '../utils/redis';
 const allowedTypes = ['folder', 'file', 'image'];
 const folderPath = process.env.FOLDER_PATH || '/tmp/files_manager';
 
-class FileController {
+class FilesController {
   static async postUpload(req, res) {
     const token = req.headers['x-token'];
     if (!token) return res.status(401).send({ error: 'Unauthorized' });
@@ -88,7 +89,7 @@ class FileController {
     const pageSize = 20;
     const pipeline = [
       { $match: { userId } },
-      { $match: { parentId: parentId === '0' ? 0 : parentId } },
+      { $match: { parentId: parentId === '0' ? 0 : ObjectId(parentId) } },
       { $skip: page * pageSize },
       { $limit: pageSize },
     ];
@@ -137,6 +138,36 @@ class FileController {
 
     return res.status(200).json(file.value);
   }
+
+  static async getFile(req, res) {
+    const fileId = req.params.id;
+
+    const file = await dbClient.getOne('files', { _id: ObjectId(fileId) });
+
+    if (!file) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+
+    if (!file.isPublic && (!req.header('X-Token') || file.userId.toString() !== await redisClient.get(`auth_${req.header('X-Token')}`))) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+
+    if (file.type === allowedTypes[0]) {
+      return res.status(400).json({ error: 'A folder doesn\'t have content' });
+    }
+
+    if (!file.localPath) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+    try {
+      const fileContent = await promises.readFile(file.localPath);
+      const mimeType = contentType(file.name) || 'text/plain; charset=utf-8';
+      res.setHeader('Content-Type', mimeType);
+      return res.status(200).send(fileContent);
+    } catch (error) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+  }
 }
 
-export default FileController;
+export default FilesController;

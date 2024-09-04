@@ -2,7 +2,7 @@ import express from 'express';
 import AppController from '../controllers/AppController';
 import AuthController from '../controllers/AuthController';
 import UsersController from '../controllers/UsersController';
-import FileController from '../controllers/FilesController';
+import FilesController from '../controllers/FilesController';
 
 const router = express.Router();
 
@@ -33,19 +33,22 @@ function myRouter(app) {
     UsersController.getMe(req, res);
   });
 
-  router.post('/files', FileController.postUpload);
+  router.post('/files', FilesController.postUpload);
 
   // GET /files/:id => FilesController.getShow
-  router.get('/files/:id', FileController.getShow);
+  router.get('/files/:id', FilesController.getShow);
 
   // GET /files => FilesController.getIndex
-  router.get('/files', FileController.getIndex);
+  router.get('/files', FilesController.getIndex);
 
   // PUT /files/:id/publish => FilesController.putPublish
-  router.put('/files/:id/publish', FileController.putPublish);
+  router.put('/files/:id/publish', FilesController.putPublish);
 
   // PUT /files/:id/unpublish => FilesController.putUnpublish
-  router.put('/files/:id/unpublish', FileController.putUnpublish);
+  router.put('/files/:id/unpublish', FilesController.putUnpublish);
+
+  // GET /files/:id/data => FilesController.getFile
+  router.get('/files/:id/data', FilesController.getFile);
 }
 
 export default myRouter;
