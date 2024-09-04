@@ -88,7 +88,7 @@ class FilesController {
     const page = Number(req.query.page) || 0;
     const pageSize = 20;
     const pipeline = [
-      { $match: { userId } },
+      { $match: { userId: ObjectId(userId) } },
       { $match: { parentId: parentId === '0' ? 0 : ObjectId(parentId) } },
       { $skip: page * pageSize },
       { $limit: pageSize },

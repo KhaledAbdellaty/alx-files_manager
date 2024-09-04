@@ -9,30 +9,25 @@ const router = express.Router();
 function myRouter(app) {
   app.use('/', router);
 
-  router.get('/status', (req, res) => {
-    AppController.getStatus(req, res);
-  });
+  // GET /status => AppController.getStatus
+  router.get('/status', AppController.getStatus);
 
-  router.get('/stats', (req, res) => {
-    AppController.getStats(req, res);
-  });
+  // GET /stats => AppController.getStats
+  router.get('/stats', AppController.getStats);
 
-  router.post('/users', (req, res) => {
-    UsersController.postNew(req, res);
-  });
+  // GET /users => UsersController.postNew
+  router.post('/users', UsersController.postNew);
 
-  router.get('/connect', (req, res) => {
-    AuthController.getConnect(req, res);
-  });
+  // GET /connect => AuthController.getConnect
+  router.get('/connect', AuthController.getConnect);
 
-  router.get('/disconnect', (req, res) => {
-    AuthController.getDisconnect(req, res);
-  });
+  // GET /disconnect => AuthController.getDisconnect
+  router.get('/disconnect', AuthController.getDisconnect);
 
-  router.get('/users/me', (req, res) => {
-    UsersController.getMe(req, res);
-  });
+  // GET /users/me => UserController.getMe
+  router.get('/users/me', UsersController.getMe);
 
+  // POST /files => FilesController.postUpload
   router.post('/files', FilesController.postUpload);
 
   // GET /files/:id => FilesController.getShow
